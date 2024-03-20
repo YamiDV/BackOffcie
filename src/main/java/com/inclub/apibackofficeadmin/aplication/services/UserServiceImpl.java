@@ -4,6 +4,7 @@ import com.inclub.apibackofficeadmin.aplication.Mapper.Interface.UserMapper;
 import com.inclub.apibackofficeadmin.aplication.services.Interface.UserService;
 import com.inclub.apibackofficeadmin.domain.Responses.Login.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.inclub.apibackofficeadmin.domain.models.User;
@@ -21,6 +22,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public Flux<UserResponse> findAllUsers() {
         return userRepository.findAll().map(userMapper::convertToResponse);
@@ -33,6 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Mono<User> saveUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
