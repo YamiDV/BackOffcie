@@ -1,6 +1,5 @@
-package com.ard333.springbootwebfluxjjwt.security;
+package com.inclub.apibackofficeadmin.security;
 
-import com.ard333.springbootwebfluxjjwt.model.User;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,6 +13,7 @@ import io.jsonwebtoken.security.Keys;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import com.inclub.apibackofficeadmin.domain.models.User;
 
 @Component
 public class JWTUtil {
@@ -50,8 +50,8 @@ public class JWTUtil {
 
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", user.getRoles());
-        return doGenerateToken(claims, user.getUsername());
+        //claims.put("role", user.getRoles());
+        return doGenerateToken(claims, user.getUserName());
     }
 
     private String doGenerateToken(Map<String, Object> claims, String username) {

@@ -11,6 +11,7 @@ import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.web.server.context.ServerSecurityContextRepository;
 import reactor.core.publisher.Mono;
 
 @AllArgsConstructor
@@ -21,7 +22,7 @@ public class WebSecurityConfig {
    
     private AuthenticationManager authenticationManager;
 
-    private SecurityContextRepository securityContextRepository;
+    private ServerSecurityContextRepository securityContextRepository;
 
     @SuppressWarnings("removal")
     @Bean

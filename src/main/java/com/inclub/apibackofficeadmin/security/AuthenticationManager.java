@@ -18,7 +18,7 @@ import reactor.core.publisher.Mono;
 @AllArgsConstructor
 public class AuthenticationManager implements ReactiveAuthenticationManager{
 
-    
+    @Autowired
     private final JWTUtil jwtUtil;
 
     @Override
