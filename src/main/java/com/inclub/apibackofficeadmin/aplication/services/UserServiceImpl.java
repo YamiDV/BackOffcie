@@ -47,6 +47,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.delete(user);
     }
 
+    @Override
+    public Mono<User> findByUsername(String username) {
+        return userRepository.findByUserName(username);
+    }
+
     
     
 }

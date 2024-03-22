@@ -16,7 +16,8 @@ public interface UserService {
     
    
     public Mono<Void> delete(User user);
-
+    
+    public Mono<User> findByUsername(String username);
     
 
     
