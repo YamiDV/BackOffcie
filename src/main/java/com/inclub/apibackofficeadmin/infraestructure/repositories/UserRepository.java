@@ -12,7 +12,5 @@ import reactor.core.publisher.Mono;
 public interface UserRepository extends ReactiveCrudRepository<User, Integer>{
 
     Mono<User> findByUserName(String username);
-
-    
     
 }

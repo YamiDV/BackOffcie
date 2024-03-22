@@ -1,34 +1,48 @@
 package com.inclub.apibackofficeadmin.api.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.inclub.apibackofficeadmin.aplication.services.Interface.UserService;
-import com.inclub.apibackofficeadmin.domain.models.User;
-import com.inclub.apibackofficeadmin.security.JWTUtil;
-import com.inclub.apibackofficeadmin.security.PBKDF2Encoder;
+import com.inclub.apibackofficeadmin.domain.Responses.Login.LoginResponse;
+import com.inclub.apibackofficeadmin.domain.models.Dtos.UserDto;
+
+
 
 import reactor.core.publisher.Mono;
 
+
+@RestController
 public class LoginController {
 
-    private JWTUtil jwtUtil;
-    private PBKDF2Encoder passwordEncoder;
+    @Autowired
     private UserService userService;
 
-    @PostMapping("/login")
 
-    public Mono<ResponseEntity<?>> login(@RequestBody User user) {
-        return userService.findByUsername(user.getUserName())
-                .map((userDetails) -> {
-                    if (passwordEncoder.encode(user.getPassword()).equals(userDetails.getPassword())) {
-                        return ResponseEntity.ok(jwtUtil.generateToken(userDetails));
-                    } else {
-                        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-                    }
-                }).defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+    @PostMapping("/login")
+    public Mono<ResponseEntity<LoginResponse>> login(@RequestBody UserDto user) {
+        return userService.validateLogin(user.getUsername(), user.getPassword())
+            .map(login -> ResponseEntity.ok().body(login))
+            .defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
+
+    // @PostMapping("/login")
+    // public Mono<ResponseEntity<LoginResponse>> login(@RequestBody UserDto user) {
+
+    //     Mono<LoginResponse> loginResponse = userService.validateLogin(user.getUsername(), user.getPassword());
+
+    //     if (loginResponse.hasElement().block()) {
+    //         return loginResponse.map(login -> ResponseEntity.ok().body(login));
+    //     } else {
+    //         return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+    //     }
+      
+                
+                
+    // }
         
 }

@@ -1,12 +1,10 @@
 package com.inclub.apibackofficeadmin.domain.models;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@Table("menu")
 public class Menu {
 
     @Getter
