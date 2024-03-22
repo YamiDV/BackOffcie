@@ -4,11 +4,13 @@ import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Getter;
 import lombok.Setter;
 
+@Table("itemmenu")
 public class ItemMenu {
     
     @Getter
@@ -26,6 +28,7 @@ public class ItemMenu {
 
     @Getter
     @Setter
+    @Column("idmenu")
     private int idMenu;
 
     @Getter
@@ -38,7 +41,7 @@ public class ItemMenu {
     @Setter
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column("updatedate")
-    private int updateDate;
+    private LocalDateTime  updateDate;
 
     public ItemMenu() {
     }

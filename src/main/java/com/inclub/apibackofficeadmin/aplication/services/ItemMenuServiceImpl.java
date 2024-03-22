@@ -1,15 +1,19 @@
 package com.inclub.apibackofficeadmin.aplication.services;
 
-import com.inclub.apibackofficeadmin.aplication.services.Interface.ItemMenuService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.stereotype.Service;
+
+import com.inclub.apibackofficeadmin.aplication.services.Interface.ItemMenuService;
 import com.inclub.apibackofficeadmin.domain.models.ItemMenu;
 import com.inclub.apibackofficeadmin.infraestructure.repositories.ItemMenuRepository;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public class ItemMenuServiceImpl implements ItemMenuService {
+@Service
+public class ItemMenuServiceImpl implements ItemMenuService  {
 
     @Autowired
     private ItemMenuRepository itemMenuRepository;
@@ -34,5 +38,10 @@ public class ItemMenuServiceImpl implements ItemMenuService {
     public Mono<Void> delete(ItemMenu itemMenu) {
         return itemMenuRepository.delete(itemMenu);
     }
+
+   @Override
+   public Flux<ItemMenu> GetRolesByUser() {
+         return itemMenuRepository.GetRolesByUser();
+   }
     
 }
