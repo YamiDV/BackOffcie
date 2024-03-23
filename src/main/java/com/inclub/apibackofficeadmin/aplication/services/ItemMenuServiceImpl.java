@@ -39,8 +39,8 @@ public class ItemMenuServiceImpl implements ItemMenuService {
     }
 
    @Override
-   public Flux<ItemMenu> GetRolesByUser() {
-         return itemMenuRepository.GetRolesByUser();
+   public Flux<String> findNamesByUserId(int userId) {
+         return itemMenuRepository.findNamesByUserId(userId);
    }
     
 }

@@ -15,7 +15,7 @@ public interface ItemMenuService {
     
     public Mono<Void> delete(ItemMenu itemMenu);
 
-    public Flux<ItemMenu> GetRolesByUser();
+    public Flux<String> findNamesByUserId(int userId);
     
 
 
