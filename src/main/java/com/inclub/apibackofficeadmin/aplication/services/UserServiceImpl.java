@@ -8,6 +8,7 @@ import com.inclub.apibackofficeadmin.domain.Responses.Login.UserResponse;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.inclub.apibackofficeadmin.domain.models.User;
@@ -27,6 +28,13 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    
+
+
+
+    @Autowired
     private JWTUtil jwtUtil;
 
     @Override
@@ -41,6 +49,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Mono<User> saveUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -59,7 +68,7 @@ public class UserServiceImpl implements UserService {
     @Override
 public Mono<LoginResponse> validateLogin(String username, String password) {
     return userRepository.findByUserName(username)
-        .filter(user -> password.equals(user.getPassword()))
+        .filter(user -> passwordEncoder.matches(password, user.getPassword()))
         .flatMap(user -> {
             String token = jwtUtil.generateToken(user);
             Date expiration = jwtUtil.getExpirationDateFromToken(token);
@@ -68,29 +77,7 @@ public Mono<LoginResponse> validateLogin(String username, String password) {
         .switchIfEmpty(Mono.empty());
 }
 
-    // @Override
-    // public Mono<LoginResponse> validateLogin(String username, String password) {
-
-       
-    //      Mono<User> userLogin =  userRepository.findByUserName(username)
-    //      .filter(user -> password.equals(user.getPassword()));
-
     
-
-    //      if (userLogin != null) {
-            
-    //          String token = jwtUtil.generateToken(userLogin.block());
-
-    //          Date expiration = jwtUtil.getExpirationDateFromToken(token);
-
-    //          return Mono.just(new LoginResponse(token, expiration));
-
-    //     }
-
-    //     return Mono.empty();
-        
-                
-    // }
 
     
     
