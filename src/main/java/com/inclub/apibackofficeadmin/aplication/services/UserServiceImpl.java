@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.inclub.apibackofficeadmin.domain.models.User;
+import com.inclub.apibackofficeadmin.infraestructure.repositories.ItemMenuRepository;
 import com.inclub.apibackofficeadmin.infraestructure.repositories.UserRepository;
 import com.inclub.apibackofficeadmin.security.JWTUtil;
 
@@ -23,6 +24,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ItemMenuRepository itemMenuRepository;
 
     @Autowired
     private UserMapper userMapper;
@@ -72,7 +76,9 @@ public Mono<LoginResponse> validateLogin(String username, String password) {
         .flatMap(user -> {
             String token = jwtUtil.generateToken(user);
             Date expiration = jwtUtil.getExpirationDateFromToken(token);
-            return Mono.just(new LoginResponse(token, expiration));
+            return itemMenuRepository.findItemsByUserId(user.getId())
+            .collectList()
+            .map(authorities -> new LoginResponse(token, expiration, authorities));
         })
         .switchIfEmpty(Mono.empty());
 }
