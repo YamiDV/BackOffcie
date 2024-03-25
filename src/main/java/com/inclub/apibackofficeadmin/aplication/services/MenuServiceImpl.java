@@ -1,15 +1,17 @@
 package com.inclub.apibackofficeadmin.aplication.services;
 
-import com.inclub.apibackofficeadmin.aplication.services.Interface.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import com.inclub.apibackofficeadmin.aplication.services.Interface.MenuService;
 import com.inclub.apibackofficeadmin.domain.models.Menu;
 import com.inclub.apibackofficeadmin.infraestructure.repositories.MenuRepository;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public class MenuServiceImpl implements MenuService {
+@Service
+public class MenuServiceImpl implements MenuService  {
 
     @Autowired
     private MenuRepository menuRepository;

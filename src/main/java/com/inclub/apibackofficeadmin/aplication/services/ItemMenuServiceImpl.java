@@ -3,12 +3,16 @@ package com.inclub.apibackofficeadmin.aplication.services;
 import com.inclub.apibackofficeadmin.aplication.services.Interface.ItemMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.stereotype.Service;
+
 import com.inclub.apibackofficeadmin.domain.models.ItemMenu;
+import com.inclub.apibackofficeadmin.domain.models.Dtos.ItemMenuDto;
 import com.inclub.apibackofficeadmin.infraestructure.repositories.ItemMenuRepository;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@Service
 public class ItemMenuServiceImpl implements ItemMenuService {
 
     @Autowired
@@ -34,5 +38,15 @@ public class ItemMenuServiceImpl implements ItemMenuService {
     public Mono<Void> delete(ItemMenu itemMenu) {
         return itemMenuRepository.delete(itemMenu);
     }
+
+   @Override
+   public Flux<String> findNamesByUserId(int userId) {
+         return itemMenuRepository.findNamesByUserId(userId);
+   }
+
+   @Override
+   public Flux<ItemMenuDto> findItemsByUserId(int userId) {
+         return itemMenuRepository.findItemsByUserId(userId);
+   }
     
 }

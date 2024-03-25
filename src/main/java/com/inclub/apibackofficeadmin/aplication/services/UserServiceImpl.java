@@ -2,12 +2,19 @@ package com.inclub.apibackofficeadmin.aplication.services;
 
 import com.inclub.apibackofficeadmin.aplication.Mapper.Interface.UserMapper;
 import com.inclub.apibackofficeadmin.aplication.services.Interface.UserService;
+import com.inclub.apibackofficeadmin.domain.Responses.Login.LoginResponse;
 import com.inclub.apibackofficeadmin.domain.Responses.Login.UserResponse;
+
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.inclub.apibackofficeadmin.domain.models.User;
+import com.inclub.apibackofficeadmin.infraestructure.repositories.ItemMenuRepository;
 import com.inclub.apibackofficeadmin.infraestructure.repositories.UserRepository;
+import com.inclub.apibackofficeadmin.security.JWTUtil;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -19,7 +26,20 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private ItemMenuRepository itemMenuRepository;
+
+    @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    
+
+
+
+    @Autowired
+    private JWTUtil jwtUtil;
 
     @Override
     public Flux<UserResponse> findAllUsers() {
@@ -33,6 +53,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Mono<User> saveUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -41,6 +62,28 @@ public class UserServiceImpl implements UserService {
     public Mono<Void> delete(User user) {
         return userRepository.delete(user);
     }
+
+    @Override
+    public Mono<User> findByUsername(String username) {
+        return userRepository.findByUserName(username);
+    }
+
+
+    @Override
+public Mono<LoginResponse> validateLogin(String username, String password) {
+    return userRepository.findByUserName(username)
+        .filter(user -> passwordEncoder.matches(password, user.getPassword()))
+        .flatMap(user -> {
+            String token = jwtUtil.generateToken(user);
+            Date expiration = jwtUtil.getExpirationDateFromToken(token);
+            return itemMenuRepository.findItemsByUserId(user.getId())
+            .collectList()
+            .map(authorities -> new LoginResponse(token, expiration, authorities));
+        })
+        .switchIfEmpty(Mono.empty());
+}
+
+    
 
     
     
