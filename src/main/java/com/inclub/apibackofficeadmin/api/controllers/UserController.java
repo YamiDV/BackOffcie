@@ -58,6 +58,14 @@ public class UserController {
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/buscar/username/{username}")
+    public Mono<ResponseEntity<User>> verUserByUsername(@PathVariable String username) {
+        return userService.findByUsername(username).map(u -> ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(u))
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
     @PutMapping("editar/{id}") 
     public Mono<ResponseEntity<User>> editarUser(@RequestBody User user, @PathVariable Integer id) {
         return userService.findUserById(id).flatMap(u -> {
@@ -84,6 +92,15 @@ public class UserController {
             return userService.delete(u).then(Mono.just(new ResponseEntity<Void>(HttpStatus.NO_CONTENT)));
         }).defaultIfEmpty(new ResponseEntity<Void>(HttpStatus.NOT_FOUND));
                     
+    }
+
+
+    @GetMapping("/recoverId")
+    public Mono<ResponseEntity<Integer>> recoverId() {
+        return userService.recoverId().map(id -> ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(id))
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     

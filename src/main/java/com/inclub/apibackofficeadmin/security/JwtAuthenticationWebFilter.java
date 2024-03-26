@@ -1,7 +1,5 @@
 package com.inclub.apibackofficeadmin.security;
 
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -16,7 +14,6 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 
 import com.inclub.apibackofficeadmin.aplication.services.Interface.ItemMenuService;
-
 import com.inclub.apibackofficeadmin.domain.models.UserLogin;
 
 import io.jsonwebtoken.Claims;
@@ -34,6 +31,8 @@ public class JwtAuthenticationWebFilter implements WebFilter {
     @Autowired
     private ItemMenuService itemMenuService;
 
+
+
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         String token = exchange.getRequest().getHeaders().getFirst("Authorization");
@@ -47,6 +46,7 @@ public class JwtAuthenticationWebFilter implements WebFilter {
 
                 Integer userId = (Integer) claims.get("id"); // Suponiendo que el ID está en el subject del token
 
+                //Recordar que el SecurityContextHolder carga en el Principal solo Id de usuario como el Username
                 UserLogin userDetails = new UserLogin(userId.toString(), null, null);
 
                 Flux<String> authorityNames = itemMenuService.findNamesByUserId(userId);
@@ -61,16 +61,14 @@ public class JwtAuthenticationWebFilter implements WebFilter {
                     return chain.filter(exchange).contextWrite(ReactiveSecurityContextHolder.withAuthentication(authentication));
                 });
 
-
             } catch (Exception e) {
                 e.printStackTrace();
                 return Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token no válido"));
             }
         }
 
-         return chain.filter(exchange);
+        return chain.filter(exchange);
 
-      
     }
 
 }
