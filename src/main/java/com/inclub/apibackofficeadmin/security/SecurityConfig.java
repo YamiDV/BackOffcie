@@ -18,8 +18,8 @@ public class SecurityConfig {
             .authorizeExchange()
             .pathMatchers("/login").permitAll()
             .pathMatchers("/admin/**").hasAuthority("ROLE_ADMIN") 
-            .pathMatchers("/users/**").hasAuthority("Nuevos Rangos") 
-            .pathMatchers("/rols/**").hasAuthority("Pagos Cuotas")
+            // .pathMatchers("/users/**").hasAuthority("Nuevos Rangos") 
+            // .pathMatchers("/rols/**").hasAuthority("Pagos Cuotas")
             .anyExchange().authenticated()
             .and().addFilterAt(jwtAuthenticationWebFilter(), SecurityWebFiltersOrder.AUTHENTICATION);
 
