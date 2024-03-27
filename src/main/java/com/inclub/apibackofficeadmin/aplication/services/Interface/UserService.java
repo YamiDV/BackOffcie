@@ -20,7 +20,11 @@ public interface UserService {
     
     public Mono<User> findByUsername(String username);
 
+   
+
     public Mono<LoginResponse> validateLogin(String username, String password);
+
+    public Mono<Integer> recoverId( );
     
     
 
